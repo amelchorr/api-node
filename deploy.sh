@@ -8,13 +8,15 @@ echo 'Paso 1.- Crear Network para el Deploy'
 docker network create devops-net
 
 echo 'Paso 2.- Crear Directorios para Persistencia del Contenedor MongoDB'
-mkdir -p ./database-data
-mkdir -p ./database-key
+sudo mkdir -p ./database-data
+sudo mkdir -p ./database-key
 
 echo 'Paso 3.- Crear Security Key File para MongoDB'
+sudo su
 openssl rand -base64 756 > $HOME/api-node/database-key/security.keyFile
 chown 999:999 ./database-key/security.keyFile
 chmod 0400 ./database-key/security.keyFile
+exit
 
 echo 'Paso 4.- Deploy de Contenedor MongoDB'
 docker run --name mongodb \
@@ -31,7 +33,7 @@ echo 'Paso 5.- Esperando a que se inicialice la Base de Datos de MongoDB ...'
 sleep 30
 
 echo 'Paso 6.- Acceder al CLI de MongoDB como Administrador y Crear Entorno para la Aplicación'
-mongosh --host ${MONGO_HOST}:27017 -u ${MONGO_ADMIN_USER} -p ${MONGO_ADMIN_PASSWORD} <<EOF
+sudo mongosh --host ${MONGO_HOST}:27017 -u ${MONGO_ADMIN_USER} -p ${MONGO_ADMIN_PASSWORD} <<EOF
     use ${MONGO_DATABASE};
     db.createUser({
         user: "${MONGO_USER}",
@@ -202,5 +204,7 @@ docker run --name api-node-devops -p $API_PORT:$API_PORT \
 echo 'Paso 9.- Subir Image al Docker Registry Harbor'
 docker pull harbor.tallerdevops.com/armando-melchor/api-node-devops:latest
 
+sleep 10
+
 echo 'Paso 10.- Probar API NodeJS'
-curl http://localhost:8081
+sudo curl http://localhost:8081

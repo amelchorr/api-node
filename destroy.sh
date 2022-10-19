@@ -11,5 +11,5 @@ docker image rm mongo
 docker image rm api-node-devops
 
 echo 'Paso 2.- Limpieza en Directorios'
-rm -rRf ./database-data
-rm -rRf ./database-key
+sudo rm -rRf ./database-data
+sudo rm -rRf ./database-key
