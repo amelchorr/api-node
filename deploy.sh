@@ -27,7 +27,10 @@ docker run --name mongodb \
 -p 27017:27017 -d \
 mongo mongod --auth --keyFile=/etc/mongodb.key --bind_ip_all
 
-echo 'Paso 5.- Acceder al CLI de MongoDB como Administrador y Crear Entorno para la Aplicación'
+echo 'Paso 5.- Esperando a que se inicialice la Base de Datos de MongoDB ...'
+sleep 30
+
+echo 'Paso 6.- Acceder al CLI de MongoDB como Administrador y Crear Entorno para la Aplicación'
 mongosh --host ${MONGO_HOST}:27017 -u ${MONGO_ADMIN_USER} -p ${MONGO_ADMIN_PASSWORD} <<EOF
     use ${MONGO_DATABASE};
     db.createUser({
@@ -181,3 +184,22 @@ mongosh --host ${MONGO_HOST}:27017 -u ${MONGO_ADMIN_USER} -p ${MONGO_ADMIN_PASSW
         }
     ]);
 EOF
+
+echo 'Paso 7.- Crear Image para la API de NodeJS'
+docker build -t api-node-devops:latest .
+
+echo 'Paso 8.- Crear Contenedor API NodeJS'
+docker run --name api-node-devops -p $API_PORT:$API_PORT \
+--restart=always \
+-e MONGO_HOST=$MONGO_HOST \
+-e MONGO_PORT=$MONGO_PORT \
+-e MONGO_USER=$MONGO_USER \
+-e MONGO_PASSWORD=$MONGO_PASSWORD \
+-e MONGO_DATABASE=$MONGO_DATABASE \
+-d api-node-devops:latest
+
+echo 'Paso 9.- Subir Image al Docker Registry Harbor'
+docker pull harbor.tallerdevops.com/armando-melchor/api-node-devops:latest
+
+echo 'Paso 10.- Probar API NodeJS'
+curl http://localhost:8081

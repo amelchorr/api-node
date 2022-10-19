@@ -8,6 +8,7 @@ echo 'Paso 1.- Limpieza en Contenedores'
 docker rm -fv mongodb
 docker network rm devops-net 
 docker image rm mongo
+docker image rm api-node-devops
 
 echo 'Paso 2.- Limpieza en Directorios'
 rm -rRf ./database-data
