@@ -3,6 +3,6 @@
 echo '==========================='
 echo '=== ARCHIVO DE LIMPIEZA ==='
 echo '==========================='
-docker rm -fv 
-docker volume rm 
-docker image rm 
+docker rm -fv mongodb
+docker network rm devops-net 
+docker image rm mongo

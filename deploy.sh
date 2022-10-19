@@ -8,20 +8,20 @@ echo 'Paso 1.- Crear Network para el Deploy'
 docker network create devops-net
 
 echo 'Paso 2.- Crear Directorios para Persistencia del Contenedor MongoDB'
-mkdir -p ./database-data
-mkdir -p ./database-key
+mkdir -p database-data
+mkdir -p database-key
 
 echo 'Paso 3.- Crear Security Key File para MongoDB'
-openssl rand -base64 756 > ./database-key/security.keyFile
-chown 999:999 ./database-key/security.keyFile
-chmod 0400 ./database-key/security.keyFile
+openssl rand -base64 756 > database-key/security.keyFile
+chown 999:999 database-key/security.keyFile
+chmod 0400 database-key/security.keyFile
 
 echo 'Paso 4.- Deploy de Contenedor MongoDB'
 docker run --name mongodb \
 --network devops-net \
 --restart=always \
--v ./database-data:/data/db \
--v ./database-key/security.keyFile:/etc/mongodb.key \
+-v database-data:/data/db \
+-v database-key/security.keyFile:/etc/mongodb.key \
 -p 27017:27017 -d \
 mongo mongod --auth --keyFile=/etc/mongodb.key --bind_ip_all
 
