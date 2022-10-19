@@ -1,0 +1,4 @@
+# compiled output
+/dist
+# node modules folder
+/node_modules
