@@ -189,7 +189,7 @@ echo 'Paso 7.- Crear Image para la API de NodeJS'
 docker build -t api-node-devops:latest .
 
 echo 'Paso 8.- Crear Contenedor API NodeJS'
-docker run --name api-node-devops -p $API_PORT:$API_PORT \
+docker run --name api-node-devops -p 8081:8081 \
 --restart=always \
 -e MONGO_HOST=$MONGO_HOST \
 -e MONGO_PORT=$MONGO_PORT \
