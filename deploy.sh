@@ -12,10 +12,10 @@ sudo mkdir -p ./database-data
 sudo mkdir -p ./database-key
 
 echo 'Paso 3.- Crear Security Key File para MongoDB'
-#sudo su
-#chown 999:999 ./database-key/security.keyFile
-#openssl rand -base64 756 > $HOME/api-node/database-key/security.keyFile
-#chmod 0400 ./database-key/security.keyFile
+sudo su
+openssl rand -base64 756 > $HOME/api-node/database-key/security.keyFile
+chown 999:999 ./database-key/security.keyFile
+chmod 0400 ./database-key/security.keyFile
 #exit
 
 echo 'Paso 4.- Deploy de Contenedor MongoDB'
