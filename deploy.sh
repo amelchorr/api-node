@@ -22,24 +22,13 @@ docker run --name mongodb \
 --restart=always \
 -v $PWD/database-data:/data/db \
 -v $PWD/database-key/security.keyFile:/etc/mongodb.key \
+-e MONGO_INITDB_ROOT_USERNAME=$MONGO_ADMIN_USER \
+-e MONGO_INITDB_ROOT_PASSWORD=$MONGO_ADMIN_PASSWORD \
 -p 27017:27017 -d \
 mongo mongod --auth --keyFile=/etc/mongodb.key --bind_ip_all
 
-echo 'Paso 5.- Acceder al CLI de MongoDB y Crear Usuario Administrador'
-docker exec mongodb mongosh <<EOF
-    use ${MONGO_ADMIN_DATABASE};
-    db.createUser({
-        user: "${MONGO_ADMIN_USER}",
-        pwd: "${MONGO_ADMIN_PASSWORD}",
-        roles:[{
-            role: "root",
-            db: "${MONGO_ADMIN_DATABASE}"
-        }]
-    });
-EOF
-
 echo 'Paso 6.- Acceder al CLI de MongoDB como Administrador y Crear Entorno para la Aplicación'
-docker exec mongodb mongosh -u ${MONGO_ADMIN_USER} -p ${MONGO_ADMIN_PASSWORD} <<EOF
+mongosh -u ${MONGO_ADMIN_USER} -p ${MONGO_ADMIN_PASSWORD} <<EOF
     use ${MONGO_DATABASE};
     db.createUser({
         user: "${MONGO_USER}",
